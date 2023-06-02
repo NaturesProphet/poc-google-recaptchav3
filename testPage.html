@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Teste do reCAPTCHA v3</title>
+  <script src="https://www.google.com/recaptcha/api.js?render=<site_key>"></script>
+  <script>
+    function verificarRecaptcha () {
+      grecaptcha.execute( '<site_key>', { action: 'nome_da_acao' } )
+        .then( function ( token ) {
+          console.log( 'Token do reCAPTCHA:', token );
+          enviarToken( token );
+        } );
+    }
+
+    function enviarToken ( token ) {
+      console.log( token )
+      const url = 'http://127.0.0.1:3000/google/recaptchav3/validate';
+      const xhr = new XMLHttpRequest();
+
+      xhr.open( 'GET', url, true );
+      xhr.setRequestHeader( 'Content-Type', 'application/json' );
+      xhr.setRequestHeader( 'recaptcha', token );
+
+      xhr.onreadystatechange = function () {
+        if ( xhr.readyState === 4 && xhr.status === 200 ) {
+          console.log( 'Token enviado com sucesso para o servidor!' );
+          // Implemente sua lógica aqui
+        }
+      };
+
+      const data = JSON.stringify( { token: token } );
+      xhr.send( data );
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Teste do reCAPTCHA v3</h1>
+  <form>
+    <!-- Seus campos do formulário aqui -->
+    <button type="button" onclick="verificarRecaptcha()">Enviar</button>
+  </form>
+</body>
+
+</html>
